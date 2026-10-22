@@ -1,0 +1,7 @@
+*.lck
+.history/
+*-backups/
+fp-info-cache
+.claude/
+.mcp.json
+*.autosave
