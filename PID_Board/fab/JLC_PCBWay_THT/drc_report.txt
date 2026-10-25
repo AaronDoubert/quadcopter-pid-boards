@@ -1,0 +1,46 @@
+** Drc report for PID_Board.kicad_pcb **
+** Created on 2026-10-25T16:04:02 **
+** Report includes: Errors **
+
+** Found 7 DRC violations **
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 2 spokes connected to isolated island)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_top' [GND] on F.Cu, priority 0
+    @(164.5600 mm, 73.6600 mm): PTH pad 2 [GND] of C26
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 2 spokes connected to isolated island)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_bottom' [GND] on B.Cu, priority 0
+    @(173.9100 mm, 39.3700 mm): PTH pad 2 [GND] of C101
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_bottom' [GND] on B.Cu, priority 0
+    @(146.0500 mm, 41.9100 mm): PTH pad 7 [GND] of U9
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 2 spokes connected to isolated island)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_top' [GND] on F.Cu, priority 0
+    @(190.5000 mm, 34.2900 mm): PTH pad 2 [GND] of J4
+[starved_thermal]: Thermal relief connection to zone incomplete (layer F.Cu; 2 spokes connected to isolated island)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_top' [GND] on F.Cu, priority 0
+    @(261.2500 mm, 38.0100 mm): PTH pad 11 [GND] of U402
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; 1 spokes connected to isolated island)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_bottom' [GND] on B.Cu, priority 0
+    @(196.8500 mm, 31.7500 mm): PTH pad 4 [GND] of U2
+[starved_thermal]: Thermal relief connection to zone incomplete (layer B.Cu; zone min spoke count 2; actual 1)
+    Local override; error
+    @(20.5000 mm, 20.5000 mm): Zone 'GND_bottom' [GND] on B.Cu, priority 0
+    @(196.8500 mm, 34.2900 mm): PTH pad 5 [GND] of U2
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **
