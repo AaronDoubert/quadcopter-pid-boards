@@ -29,8 +29,8 @@ trimpots, fed by an MPU-6050 through a small ATtiny/DAC "shim", driving a 4in1 E
 </table>
 
 **Order / build files**
-- **Download:** Gerbers, BOM, CPL and STEP are attached to the [latest release](https://github.com/AaronDoubert/quadcopter-pid-boards/releases/latest).
-- **In the repo:** [`PID_Board/fab/JLC_PCBWay_THT/`](PID_Board/fab/JLC_PCBWay_THT/), with the Gerber + drill zip, grouped BOM and pick-and-place file.
+- **Gerbers (upload this zip to JLCPCB or PCBWay as a 4-layer board):** [`PID_Board_gerbers_drill.zip`](PID_Board/fab/JLC_PCBWay_THT/PID_Board_gerbers_drill.zip)
+- **BOM and pick-and-place:** [`PID_Board/fab/JLC_PCBWay_THT/`](PID_Board/fab/JLC_PCBWay_THT/) (grouped BOM, CPL)
 - **3D model:** [`PID_Board/cad/`](PID_Board/cad/) (STEP).
 - [`PID_Board/MOUNTING.md`](PID_Board/MOUNTING.md): stack order, standoffs, where each module goes, what to measure before ordering.
 - [`PID_Board/KNOWN_ISSUES.md`](PID_Board/KNOWN_ISSUES.md): things to check before first power-up.
