@@ -15,7 +15,7 @@ trimpots, fed by an MPU-6050 through a small ATtiny/DAC "shim", driving a 4in1 E
 | ESC | 4in1 sits underneath the rear section on the 20x20 holes; harness to J5 |
 | IMU | GY-521 on a header, MPU-6050 directly over the frame CG |
 | Receiver | ELRS 2.4 GHz (for example RadioMaster RP1/RP2), CRSF on J6 at the front edge |
-| Power | VBAT from the ESC harness → 1N5817 → Pololu D24V5F5 5 V buck |
+| Power | VBAT (2S–4S) from the ESC harness → 1N5817 → mini fixed-5 V buck module on U10 (3 wires; see MOUNTING.md) |
 | Tuning | One labelled panel per axis: test points, LOOP/GYRO jumpers, Go/Kp/Ki/Kd trimpots, all prop-clear |
 | Layers | Top/bottom signals, In1 GND plane, In2 +5 V plane |
 

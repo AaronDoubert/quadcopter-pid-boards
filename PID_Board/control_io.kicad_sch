@@ -2906,7 +2906,7 @@
 		)
 		(uuid "9020b34f-1043-4f52-97ec-5a12d0ef8679")
 	)
-	(text "Power: VBAT (2S-4S via ESC harness) -> 1N5817 -> Pololu D24V5F5 -> +5V"
+	(text "Power: VBAT (2S-4S via ESC harness) -> 1N5817 -> 5V buck module on U10 (IN+ pin 2, GND pin 3, OUT+ pin 4) -> +5V"
 		(exclude_from_sim no)
 		(at 20.32 99.06 0)
 		(effects
@@ -3141,7 +3141,7 @@
 				)
 			)
 		)
-		(property "Value" "Pololu D24V5F5"
+		(property "Value" "5V buck module (Mini 5V 3A)"
 			(at 81.28 125.73 0)
 			(effects
 				(font

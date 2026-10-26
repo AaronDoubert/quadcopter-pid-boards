@@ -9,7 +9,11 @@
   Verify its pin order is S-G-D before fitting (BS170 is reversed). Fit Q1-Q3 in 1x3 sockets so the swap is easy.
 
 ## Other items to verify before first power-up
-- Pololu D24V5F5 (U10) pin order: header is 1 unconnected, 2 VIN (after D1), 3 GND, 4 VOUT.
+- U10 (5 V buck module) wiring: header pin 1 unconnected, 2 VIN (after D1), 3 GND, 4 VOUT. With the
+  Teyleten mini module, that is IN+ to 2, IN- to 3 and OUT+ to 4 (see MOUNTING.md).
+- The power section is sized for 2S-4S. For 6S (25.2 V fully charged), C25 (47 uF 25 V after D1) needs a 35 V+ part (a 10 uF/50 V
+  from the parts kit works), and the mini buck is rated "recommended within 28 V". That leaves little margin
+  for motor-braking spikes.
 - J5 ESC harness pin order against the Aero Selfie 4in1 30A.
 - UPDI headers J4/J7 carry +5 V: do not connect a UPDI programmer while the battery is plugged in.
 - Mechanical fit (see MOUNTING.md): the motor positions, the GY-521 chip offset and the ESC height

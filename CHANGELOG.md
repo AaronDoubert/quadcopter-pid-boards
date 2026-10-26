@@ -5,6 +5,11 @@ one in `PID_Board/`; older through-hole revisions are kept in `PID_Board/old_ver
 
 ## PID_Board (through-hole)
 
+### Rev B.1 (2026-10-26)
+- U10 buck: the documented module changed from the Pololu D24V5F5 to a cheap fixed-5 V mini buck (Teyleten
+  "3A Mini DCDC Buck", 5.5-30 V in), wired into the existing U10 header pins 2/3/4. No copper change.
+- KNOWN_ISSUES: the power section is 2S-4S; for 6S, C25 needs a 35 V+ rating.
+
 ### Rev B (2026-10-25): compact frame-mount layout. Current version (tag `pid-tht-rev-b`)
 Redesigned to mount on the 5" quad frame instead of sitting on the bench.
 - **Size:** 250 x 100 mm became **90 x 210 mm**, a long narrow board that runs along the frame body.

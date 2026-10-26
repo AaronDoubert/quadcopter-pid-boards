@@ -45,8 +45,16 @@ used. The board does not need them.
   this against your module). Only low parts are under it. A pad of foam tape between the module and
   the board helps with vibration.
 * **Power.** The ESC harness goes to J5 on the rear edge (GND, VBAT, M1-M4). VBAT then goes through
-  D1 (1N5817) to U10, a Pololu D24V5F5 standing between the four ESC holes, and its 5 V output feeds the
-  +5 V plane.
+  D1 (1N5817) to U10, a small fixed-5 V buck module next to the four ESC holes. Its 5 V output feeds
+  the +5 V plane.
+  * **Module used:** Teyleten Robot "3A Mini DCDC Buck" 5 V fixed, 5.5-30 V in, 10-pack, Amazon
+    B0DKTMGBHL. Its pads are four castellated corners: IN+ and IN- at one end, OUT+ and OUT- at the other
+    (IN- and OUT- are both ground).
+  * **Wiring (no board change):** U10 is a 1x4 header footprint. Solder three short wires into it:
+    module IN+ to pin 2 (VIN), IN- to pin 3 (GND), OUT+ to pin 4 (+5 V). Pin 1 stays empty. Stick the
+    module flat to the board beside the header with foam tape.
+  * Check 5.0 V on pin 4 with a meter before plugging in the ICs, the GY-521 or the receiver.
+  * Any 3-pin "7805 replacement" (IN-GND-OUT) or a Pololu D24V5F5 also fits straight into pins 2-4.
 * **ELRS receiver.** A RadioMaster RP1 V2 or RP2, or any ELRS 2.4 GHz nano receiver with CRSF
   output, works with the T8L. Solder it to J6 (5V, GND, CRSF) with short wires and stick it under the
   front overhang. Run the antenna up and back along a standoff, away from the ESC and the carbon. Only the

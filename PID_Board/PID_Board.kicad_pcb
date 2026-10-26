@@ -4029,7 +4029,7 @@
 				)
 			)
 		)
-		(property "Value" "Pololu D24V5F5"
+		(property "Value" "5V buck module (Mini 5V 3A)"
 			(at 0 10 0)
 			(layer "F.Fab")
 			(uuid "c0538ac7-118a-4ab4-a1ca-6cc1325bdce7")
