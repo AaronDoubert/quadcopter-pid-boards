@@ -12,8 +12,32 @@
 - Pololu D24V5F5 (U10) pin order: header is 1 unconnected, 2 VIN (after D1), 3 GND, 4 VOUT.
 - J5 ESC harness pin order against the Aero Selfie 4in1 30A.
 - UPDI headers J4/J7 carry +5 V: do not connect a UPDI programmer while the battery is plugged in.
-- 7 starved-thermal DRC warnings on GND pads (connected, cosmetic).
+- Mechanical fit (see MOUNTING.md): the motor positions, the GY-521 chip offset and the ESC height
+  are taken from the frame sketch and module listings, not measured.
 
-## Changes in this revision
+## Rev B layout notes
+- The tracks were routed by a script-driven grid router (FreeRouting 2.1 could not finish this
+  board), then straightened to 45/90 degree segments. DRC is clean, but the routing looks
+  machine-made, and a few cross-board signals run 100 mm or more. That is fine here: they are
+  low-impedance DAC outputs, VGND rails and slow control lines, all over a solid GND plane. The
+  longest high-impedance runs are the integrator reset lines to U9 (CD4066), which serves all three
+  axes from the middle of the board.
+- Hand soldering a 4-layer board: GND and +5 V pads connect to the inner planes through thermal
+  reliefs. They still take a little longer to heat than signal pads, so use a hotter or wider tip on them.
+- 4-layer at 90 x 210 mm costs more than the old 2-layer board at JLCPCB/PCBWay. A 2-layer version
+  is possible at this size but would need GND pours and many more vias.
+
+## Changes in rev B (frame-mount layout)
+- Board reshaped from 250 x 100 mm to 90 x 210 mm to fit the 5" frame. Holes for the 30.5 stack and the
+  20x20 ESC stack, each with a 3.4 mm copper-free ring for standoffs. Tall parts stay out of
+  the prop disks.
+- Floorplan in bands, front to rear: DAC shim, ROLL, GY-521 over the frame CG (+ REF panel, J1),
+  PITCH (laid out as the mirror image of ROLL), and YAW + control I/O + power over the ESC. Each axis has a tuning
+  panel: labelled test-point row, LOOP/EXT jumper, Go/Kp/Ki/Kd trimpots, GYRO/EXT jumper.
+- 4 layers: In1.Cu GND plane, In2.Cu +5 V plane; signals on top and bottom.
+- Resistor footprints changed from 10.16 mm to 7.62 mm lead pitch (still lying flat).
+- ELRS header J6 moved to the front edge next to the shim MCU (short CRSF line).
+
+## Changes in rev A
 - Added R24 (ARM) and R25 (I_HOLD) 10k pulldowns so the motor-arm and integrator-hold lines are defined while the ATtinys boot.
 - Silkscreen cleanup, board name text, JLCJLCJLCJLC marker on the back.

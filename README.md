@@ -4,7 +4,7 @@ Analog PID controller boards (roll / pitch / yaw + reference) for a quadcopter, 
 
 | Board | Description | Top render | Bottom render | BOM |
 |---|---|---|---|---|
-| `PID_Board/` | Through-hole version | `pcb_top_render.png` | `pcb_bottom_render.png` | `fab/PID_Board-bom.csv` |
+| `PID_Board/` | Through-hole version, rev B: 90 x 210 mm 4-layer, fits the 5" frame (see `PID_Board/MOUNTING.md`, `mounting_plan.png`) | `pcb_top_render.png` | `pcb_bottom_render.png` | `fab/PID_Board-bom.csv` |
 | `PID_Board_SMT/` | SMT version with digital pots (JLCPCB-ready) | `pcb_top_render.png` | `pcb_bottom_render.png` | `fab/PID_Board_SMT-bom.csv`, `fab/PID_Board_SMT_BOM_JLCPCB.csv` |
 
 Each board folder contains the KiCad project, Gerbers (`fab/`), and renders. `PID_Board_SMT/` also has the schematic PDF, notes, and build scripts. `sim/` holds the MATLAB roll-axis model and sweeps.
