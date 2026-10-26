@@ -5,3 +5,4 @@ fp-info-cache
 .claude/
 .mcp.json
 *.autosave
+.kicad-layer/
