@@ -3,6 +3,17 @@
 All boards are KiCad 10 projects. Each version is tagged in git. The latest through-hole board is the
 one in `PID_Board/`; older through-hole revisions are kept in `PID_Board/old_versions/`.
 
+## Simulation (`sim/`)
+
+### 2026-11-01: quad model + board twin
+- **Quad model** `sim/quad_plant/quad_sim.slx`: 6-DOF 5" quad (2207 1800KV, 5x4.3x3, 4S, 650 g) with ESC, motors, battery sag, IMU and ground contact. It has a controller slot that holds the ideal PID or the board twin.
+- **Board twin** `sim/pid_board/pid_board.slx`: shim, the 5 analog loops and control_io, built from the rev B schematic values. The analog section has two variants:
+  - fast and behavioural (`pid_analog_fast.slx`)
+  - a Simscape Electrical circuit (`pid_analog_circuit.slx`)
+- **Bench harness** that mirrors the real board's test points, plus a validation suite.
+- **Conservative first-flight trimpot settings** and per-axis mixer scales (`sim/gains/`), checked with both variants flying the quad.
+- The original roll-axis model moved to `sim/legacy_roll_axis/`.
+
 ## PID_Board (through-hole)
 
 ### Rev B.1 (2026-10-26)
