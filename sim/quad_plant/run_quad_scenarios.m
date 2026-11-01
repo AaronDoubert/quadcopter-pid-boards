@@ -135,7 +135,11 @@ f = fieldnames(S);
 for i = 1:numel(f)
     if endsWith(f{i}, '_t') || strcmp(f{i}, 't'), continue; end
     tt = S.([f{i} '_t']);
-    if numel(tt) ~= numel(S.t) || any(tt ~= S.t)
+    if isempty(tt)                       % not logged (e.g. ctrl_dbg while the board is in the slot)
+        S.(f{i}) = nan(numel(S.t), 1);
+    elseif numel(tt) < 2                 % constant signal
+        S.(f{i}) = repmat(double(S.(f{i})(1,:)), numel(S.t), 1);
+    elseif numel(tt) ~= numel(S.t) || any(tt ~= S.t)
         S.(f{i}) = interp1(tt, double(S.(f{i})), S.t, 'previous', 'extrap');
     end
 end

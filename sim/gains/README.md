@@ -24,17 +24,28 @@ It's then checked on the linearised hover plant. "Wary" means every one of these
 - **Integrator clamp:** at least 75 µs, enough to trim about a 20 mm CG offset.
 - **Angle loop:** at least 70° phase margin, and at least 5× slower than the rate loop.
 
+## Checked with the board twin flying the quad
+
+These are the pots and mixer scales above, in Model 2 (both analog variants) inside Model 1:
+
+| | Roll step | Pitch step | Yaw step | Hover rms | Takeoff tilt |
+|---|---|---|---|---|---|
+| Board twin, fast | 0% OS, 0.55 s | 4.2% OS, 0.41 s | 14% OS, 0.07 s | 2.6° / 1.7° | 2.1° |
+| Board twin, Simscape circuit | 0% OS, 0.56 s | 4.0% OS, 0.41 s | 12% OS, 0.07 s | 2.6° / 1.7° | 2.1° |
+
+Hover rms is roll / pitch. The hover error comes from the shim's assumed angle estimator. With true angles it is 0.05°; see `sim/README.md`.
+
 ## Checked in the nonlinear sim (Model 1, ideal controller with these gains)
 
 | Test | Result |
 |---|---|
-| 15° roll / pitch step | 0.0% / 0.2% overshoot, 0.43 s to settle (5%) |
-| 100 °/s yaw step | 2.8% overshoot, 0.05 s |
+| 15° roll / pitch step | 0.0% / 0.2% overshoot, 0.45 s to settle (5%) |
+| 100 °/s yaw step | 2.7% overshoot, 0.07 s |
 | Hover | 0.04° rms attitude noise |
-| Full-throttle punch | 2.5° max attitude disturbance |
-| Takeoff | 0.6° max tilt |
-| Inertia 0.7× to 1.7× | No change (0% overshoot); at 2.5×: 3–4% overshoot |
-| CG offset 5 / 10 / 20 mm | Takeoff tilt about 2 / 3.5 / 6.8°, hover tilt about 0.2 / 0.37 / 0.75° |
+| Full-throttle punch | 2.8° max attitude disturbance |
+| Takeoff | 0.7° max tilt |
+| Inertia 0.7× to 1.7× | No change (0–0.2% overshoot); at 2.5×: 4–4.5% overshoot |
+| CG offset 5 / 10 / 20 mm | Takeoff tilt about 2 / 4 / 7.5°, hover tilt about 0.2 / 0.4 / 0.87° |
 
 **Keep the CG within about 5 mm of the motor centre.** The soft gains handle wrong inertia easily. But because the board's integrator leaks, it can't fully hold the constant torque an off-centre CG needs. The quad leans and drifts slightly, and it tilts more at takeoff, before the integrator has caught up.
 

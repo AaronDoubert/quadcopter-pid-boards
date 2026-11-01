@@ -4,7 +4,7 @@ function B = ctrl_ideal_to_board(ideal, pcb, Kmix)
 %   B = ctrl_ideal_to_board(ideal, pcb, Kmix)
 %   pcb = struct from sim/pid_board/pid_board_params.m. Prints a table and
 %   flags values outside the pots' ranges. Mapping (see ctrl_ideal_params.m):
-%     Kp_b = Kp/(Kmix*Kw),  Ki_b = Ki/(Kmix*Kw),  Kd_b = Kd/(Kmix*Kw)
+%     Kp_b = Kp/(Kmix*Kw*g_fb),  Ki_b = Ki/(Kmix*Kw*g_fb),  Kd_b = Kd/(Kmix*Kw*g_fb)
 %       Kw = pcb.scale.Kw*180/pi  [V per rad/s]
 %     Go   = Ka/(g_ang*(Ktheta/Kw_deg)*(g_sp/g_fb))
 %     RV_P = Kp_b*R_P_in - R_P_fixed           Kp_b = (4.7k + RV_P)/47k
@@ -25,7 +25,8 @@ for a = 1:3
     else
         RIf = c.R_I_fixed;
     end
-    b.Kp = g.Kp/(Kmix*Kw); b.Ki = g.Ki/(Kmix*Kw); b.Kd = g.Kd/(Kmix*Kw);
+    gk = Kmix*Kw*c.g_fb;                       % gyro leg of the diff amp (1k + 10k) has gain 0.909
+    b.Kp = g.Kp/gk; b.Ki = g.Ki/gk; b.Kd = g.Kd/gk;
     b.RV_P = b.Kp*c.R_P_in - c.R_P_fixed;
     b.RV_I = 1/(b.Ki*c.CI) - RIf;
     b.RV_D = b.Kd/c.Cd - c.Rd_fixed;

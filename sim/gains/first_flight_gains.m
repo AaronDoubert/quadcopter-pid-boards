@@ -7,7 +7,7 @@ function FF = first_flight_gains(varargin)
 %   control_io firmware constant, pcb.ctrl.K_rpy) and the trimpots RV_P,
 %   RV_I, RV_D (and RV_A for the angle loop). Every candidate is turned into
 %   the equivalent board-shaped controller
-%       C = Kmix*Kw*[Kp_b + Ki_b/(s + wL) + Kd_b*s/((1+s/w1)(1+s/w2))]
+%       C = Kmix*Kw*g_fb*[Kp_b + Ki_b/(s + wL) + Kd_b*s/((1+s/w1)(1+s/w2))]
 %   with w2 set by RV_D, and checked on the hand-linearised hover plant from
 %   tune_ideal.m plus the board's own extra delay (control_io ZOH and compute).
 %
@@ -17,12 +17,13 @@ function FF = first_flight_gains(varargin)
 %       inertia x0.7, and 2 ms of extra unmodelled delay
 %     - trimpots between 10 % and 90 % of travel (room to tune both ways)
 %     - integrator clamp Kmix*0.75 V >= 75 us (enough to trim a ~20 mm CG offset)
+%     - integrator zero Ki/Kp at least 2x below the rate crossover
 %     - angle loop PM >= 70 deg and at least 5x slower than the rate loop
 %   Among the candidates that pass, the one with the highest nominal
 %   crossover is kept (ties: pots closest to mid travel).
 
 o = struct('apply', false, 'PM', 55, 'GM', 10, 'PMr', 35, 'GMr', 6, 'Jhi', 1.7, 'Jlo', 0.7, ...
-           'dly', 2e-3, 'travel', [0.1 0.9], 'Imin_us', 75, 'PMo', 70, 'sep', 5);
+           'dly', 2e-3, 'travel', [0.1 0.9], 'Imin_us', 75, 'PMo', 70, 'sep', 5, 'izr', 2);
 for k = 1:2:numel(varargin), o.(varargin{k}) = varargin{k+1}; end
 here = fileparts(mfilename('fullpath'));
 root = fullfile(here, '..');
@@ -64,9 +65,9 @@ for a = 1:3
                 for fD = fDs
                     RVD = fD*c.RV_D_max; Rd = c.Rd_fixed + RVD;
                     Kdb = useD*Rd*c.Cd; w2 = 1/(Rd*c.Cf);
-                    C = Kmix*Kw*(Kpb + Kib/(s + wL) + Kdb*s/((1 + s/w1)*(1 + s/w2)));
+                    C = Kmix*Kw*c.g_fb*(Kpb + Kib/(s + wL) + Kdb*s/((1 + s/w1)*(1 + s/w2)));
                     [ok, wc, pm, gm] = local_check(C*G, o.PM, o.GM);
-                    if ~ok || wc < best.wc, continue; end
+                    if ~ok || wc < best.wc || Kib/Kpb > wc/o.izr, continue; end
                     if ~local_check(C*Ghi, o.PMr, o.GMr) || ~local_check(C*Glo, o.PMr, o.GMr) ...
                             || ~local_check(C*Gdl, o.PMr, o.GMr), continue; end
                     mid = abs(fP - 0.5) + abs(fI - 0.5) + useD*abs(fD - 0.5);
@@ -84,7 +85,8 @@ for a = 1:3
     [~, best.PM_Jhi] = local_margins(best.C*Ghi); [~, best.PM_Jlo] = local_margins(best.C*Glo);
     [~, best.PM_dly] = local_margins(best.C*Gdl);
     % equivalent ideal-controller gains (ctrl_ideal units: us/(rad/s), us/rad, us/(rad/s^2))
-    best.Kp = best.Kmix*Kw*best.Kp_b; best.Ki = best.Kmix*Kw*best.Ki_b; best.Kd = best.Kmix*Kw*best.Kd_b;
+    gk = best.Kmix*Kw*c.g_fb;               % gyro leg of the diff amp is 1k + 10k: gain 0.909
+    best.Kp = gk*best.Kp_b; best.Ki = gk*best.Ki_b; best.Kd = gk*best.Kd_b;
     best.I_max_us = best.Kmix*c.V_iclamp;
     % outer angle loop: Go = (10k + RV_A)/20k
     best.Ka = 0; best.RV_A = NaN; best.Go = NaN; best.PM_outer = NaN; best.wc_outer = NaN;
