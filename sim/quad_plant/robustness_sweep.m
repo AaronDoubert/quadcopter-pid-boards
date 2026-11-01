@@ -1,13 +1,16 @@
-function R = robustness_sweep()
+function R = robustness_sweep(ideal_in)
 %ROBUSTNESS_SWEEP How the tuned ideal gains cope with wrong inertia or an offset CG.
 %   R = robustness_sweep() keeps the gains in ctrl_ideal_params fixed and
 %   reruns quad_sim scenarios with the plant changed:
 %     R.inertia  roll/pitch steps with J scaled by 0.7, 1, 1.4, 1.7, 2.5
 %     R.cg       hover and takeoff with the CG moved fore/aft and sideways
+%   R = robustness_sweep(ideal) uses that gain struct instead (for example
+%   the first-flight set from sim/gains/first_flight_gains('apply', true)).
 %   Restores quad in the base workspace afterwards.
 
 here = fileparts(mfilename('fullpath'));
 evalin('base', sprintf('run(''%s'')', fullfile(here, 'quad_sim_params.m')));
+if nargin > 0, assignin('base', 'ideal', ideal_in); end
 quad0 = evalin('base', 'quad');
 cleanup = onCleanup(@() assignin('base', 'quad', quad0));
 
