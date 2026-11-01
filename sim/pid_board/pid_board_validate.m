@@ -178,7 +178,7 @@ pcb = evalin('base', 'pcb');
 nfail = 0; r = struct();
 tmp = fullfile(tempdir, 'pid_board_legacy');
 if ~isfolder(tmp), mkdir(tmp); end
-src = fileread(fullfile(here, '..', 'build_roll_model.m'));
+src = fileread(fullfile(here, '..', 'legacy_roll_axis', 'build_roll_model.m'));
 src = strrep(src, 'mdl  = ''roll_axis'';', 'mdl  = ''pid_board_legacy_roll'';');
 % LEGACY BUG: build_roll_model.m never wires the Command path inport to its Ktheta gain,
 % so roll_axis.slx ignores theta_cmd (angle command is always 0). Fixed in the temp copy.
@@ -187,7 +187,7 @@ src = strrep(src, 'dacChain(cp, ''cmd'', ''Ktheta/1'', ''theta_cmd_V/1'');', ...
 fprintf('   note: legacy build_roll_model.m leaves the theta_cmd inport unconnected (fixed in the temp copy)\n');
 src = regexprep(src,', \.\.\.\s*''PreLoadFcn'', ''[^\n]*''\);', ');');
 fid = fopen(fullfile(tmp, 'build_roll_model.m'), 'w'); fwrite(fid, src); fclose(fid);
-copyfile(fullfile(here, '..', 'roll_params.m'), fullfile(tmp, 'roll_params.m'));
+copyfile(fullfile(here, '..', 'legacy_roll_axis', 'roll_params.m'), fullfile(tmp, 'roll_params.m'));
 P = legacyBuild(tmp);              % builds in tmp, returns the roll_params variables
 mdl = 'pid_board_legacy_roll';
 mkin = @(vars) legacyInput(mdl, P, vars);
@@ -243,7 +243,7 @@ function P = legacyBuild(tmp)
 % run the patched build script and roll_params in THIS function's workspace
 run(fullfile(tmp, 'build_roll_model.m'));
 clear tmp
-run(fullfile(fileparts(which('pid_board_validate')), '..', 'roll_params.m'));
+run(fullfile(fileparts(which('pid_board_validate')), '..', 'legacy_roll_axis', 'roll_params.m'));
 v = who;
 P = struct();
 for k = 1:numel(v)
