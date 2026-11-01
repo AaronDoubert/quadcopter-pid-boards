@@ -43,11 +43,23 @@ trimpots, fed by an MPU-6050 through a small ATtiny/DAC "shim", driving a 4in1 E
 
 Files: `PID_Board_SMT/fab/` (Gerbers, BOM, CPL), `PID_Board_SMT/SMT_NOTES.md`, `PID_Board_SMT/scripts/`.
 
+## Simulation: quad model + digital twin of the board
+
+![Simscape circuit model of the board flying the quad](sim/docs/img/m2_circuit_roll_step.gif)
+
+[`sim/`](sim/README.md) holds two linked Simulink models (R2024b):
+- **The quad:** 6-DOF 5" quad with 2207 1800KV motors, 5x4.3x3 props, a 4S battery with voltage sag, the ESC and the MPU-6050.
+- **The board twin:** shim, all 5 analog loops, control_io. The analog section comes as either a fast behavioural model or a Simscape Electrical circuit model.
+
+The board twin plugs into the quad's controller slot, or runs on a bench harness that mirrors the real board's test points.
+
+**[First-flight trimpot settings](sim/gains/first_flight_gains.md)** are conservative values checked in the sim, with margin for inertia and delay errors. How they were chosen and a suggested first-flight procedure are in [`sim/gains/README.md`](sim/gains/README.md).
+
 ## Repository layout
 | Path | What |
 |---|---|
 | `PID_Board/` | Through-hole board, rev B (current) |
 | `PID_Board/old_versions/` | Earlier through-hole revisions (v1, rev A: 250 x 100 mm bench layout) |
 | `PID_Board_SMT/` | SMT / digital-pot board |
-| `sim/` | MATLAB roll-axis model and sweeps |
+| [`sim/`](sim/README.md) | Simulink quad model, board twin (fast + Simscape circuit), first-flight gains, docs |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history |
