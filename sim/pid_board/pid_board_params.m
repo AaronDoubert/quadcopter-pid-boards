@@ -79,7 +79,11 @@ pcb.shim.gyro_fs   = 250;    % deg/s, MPU-6050 FS_SEL=0 (doc: sketch default)
 pcb.shim.acc_fs    = 2;      % g, AFS_SEL=0 (doc: sketch default)
 pcb.shim.t_dlpf    = 2.8e-3; % s, DLPF_CFG=2 (98 Hz) as a pure delay (assumed, briefing)
 pcb.shim.t_dlpf_cfg0 = 0.98e-3; % s, delay if DLPF is left at reset (CFG=0, 256 Hz): sketch
-pcb.shim.cf_alpha  = 0.98;   % complementary-filter gyro weight per frame (assumed)
+pcb.shim.cf_alpha  = 0.99995; % complementary-filter gyro weight per frame (assumed). The spec's
+                              % ~0.98 (tau = 50 ms at 1 kHz) fails in flight: in coordinated flight the
+                              % accelerometer sees thrust, not gravity, so a fast CF pulls the angle
+                              % estimate to 0 (Model 1 roll_step: 361 % overshoot). 0.99995 = tau 20 s
+                              % tracks steps but turns gyro bias into angle error (bias * tau).
 pcb.shim.gyro_nd   = 0.005;  % deg/s/sqrt(Hz), MPU-6050 rate noise density
 pcb.shim.angle_max = 60;     % deg, stick full scale -> +-1.5 V (assumed, guide FS)
 pcb.shim.yaw_rate_max = 250; % deg/s, stick full scale -> +-1.5 V (assumed)
@@ -250,6 +254,43 @@ pcb.ctrl.us_res    = 1;        % us, pulse resolution (assumed; 8-bit TCA split 
 pcb.ctrl.R_esc_series = 1e3;
 pcb.ctrl.R_esc_shunt  = 2.2e3;
 pcb.ctrl.V_esc_high   = pcb.VDD*2.2e3/(1e3 + 2.2e3);   % V, 3.44 V logic high at the ESC
+
+%% Model 2 (pid_board.slx) options - added with the fast behavioural model
+% Analog section variant (Variant Subsystem "Analog section" in pid_board.slx):
+%   1 = pid_analog_fast.slx (behavioural, default), 2 = pid_analog_circuit.slx (Simscape)
+%   pid_board.slx itself selects with its model argument board_variant (default 1);
+%   the harnesses pid_board_bench/pid_board_cl pass board_variant = pcb.variant.
+pcb.variant = 1;
+% Simulation step: all board models are Fixed-step ode4 with this step, which MUST equal the
+% parent's step (Model 1 quad_sim: qsim.dt = 0.5 ms). Discrete rates are multiples of it.
+pcb.sim_dt = 0.5e-3;
+% 1 = compile pid_analog_circuit.slx for board_variant = 2 instances (it must exist and be
+% Fixed-step ode4 compatible); 0 = never load it (a board_variant = 2 instance then has a DEAD
+% analog section, all outputs 0 V). Default 1.
+pcb.circuit_enable = 1;
+% Shim firmware choices (all assumed: no PCB firmware exists)
+pcb.shim.axis_sign = [1 -1 1];  % board axis = sign * body (FRD) axis, for rate AND angle:
+                                %   roll +p (right side down), pitch -q (NOSE-DOWN positive,
+                                %   matches the Betaflight mixer pitch column), yaw +r (nose right)
+pcb.shim.angle_src = 1;         % 1 = complementary filter on IMU, 0 = use ctrl_in.euler_true
+pcb.shim.noise_on  = 0;         % 1 = add MPU-6050 white rate noise (gyro_nd)
+pcb.shim.gyro_lsb  = 1/131;     % deg/s per LSB at FS_SEL=0
+pcb.shim.acc_lsb   = 1/16384;   % g per LSB at AFS_SEL=0
+pcb.shim.ihold_low_thr = 1;     % 1 = I_HOLD also high while throttle < thr_low (assumed)
+pcb.shim.thr_low   = 0.05;      % throttle fraction below which I_HOLD is asserted
+% control_io firmware choices (assumed)
+pcb.ctrl.delay_frames = 0;      % extra whole-frame delays between ADC sample and pulse
+% Bench / external test-point drive (used by pid_board.slx; jumpers are pcb.<axis>.JP_*)
+%   ext_sp_src per axis [roll pitch yaw]: 0 = VG (open), 1 = PLANT_OUT flying lead
+%   (roll/pitch only), 2 = AD3 W1 generator.  ext_fb_src: 0 = VG, 2 = W1 generator.
+pcb.bench.ext_sp_src = [0 0 0];
+pcb.bench.ext_fb_src = [0 0 0];
+pcb.bench.w1_offset  = 0;       % V re VG
+pcb.bench.w1_amp     = 0.1;     % V (step height or sine amplitude)
+pcb.bench.w1_freq    = 0;       % Hz, 0 = step at w1_t0, > 0 = sine starting at w1_t0
+pcb.bench.w1_t0      = 0.05;    % s
+pcb.bench.lead_tau   = 0.5e-3;  % s, flying-lead lag PLANT_OUT -> EXT_SP (breaks the algebraic loop;
+                                %    >= 0.2 ms keeps ode4 at 0.5 ms stable)
 
 %% Power (sheet Control_IO)
 pcb.pwr.VBAT_range = [7.4 16.8]; % V, 2S-4S via J5 pin 2 (not measured by any ADC)
