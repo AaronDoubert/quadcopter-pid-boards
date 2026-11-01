@@ -6,3 +6,9 @@ fp-info-cache
 .mcp.json
 *.autosave
 .kicad-layer/
+
+# MATLAB/Simulink build artifacts
+*.slxc
+slprj/
+*.asv
+*.autosave
